@@ -57,19 +57,21 @@ export default function PaymentFlow({ merchantData, onBack, onComplete }: Paymen
     setError('');
 
     try {
-      // Create APT transfer transaction using the correct format
+      // Create APT transfer transaction using the Aptos SDK
+      const escrowAddress = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
+      
       const transaction = {
         data: {
-          function: '0x1::aptos_account::transfer',
+          function: "0x1::coin::transfer",
           functionArguments: [
-            '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef', // Mock escrow wallet
-            aptosService.parseAmount(aptAmount).toString(), // Amount in octas as string
-          ],
-        },
+            escrowAddress,
+            aptosService.parseAmount(aptAmount).toString()
+          ]
+        }
       };
 
       // Sign and submit transaction
-      const response = await signAndSubmitTransaction(transaction);
+      const response = await (window as any).aptos.signAndSubmitTransaction(transaction);
       const txHash = typeof response === 'string' ? response : response.hash;
       setTransactionHash(txHash);
 

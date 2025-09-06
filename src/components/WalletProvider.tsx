@@ -9,12 +9,8 @@ interface WalletProviderProps {
 }
 
 export function WalletProvider({ children }: WalletProviderProps) {
-  // Use empty array for now - wallets will be auto-detected
-  const wallets: never[] = [];
-
   return (
     <AptosWalletAdapterProvider
-      plugins={wallets}
       autoConnect={true}
       dappConfig={{
         network: Network.TESTNET, // Use testnet for development

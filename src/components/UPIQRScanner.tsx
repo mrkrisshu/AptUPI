@@ -29,6 +29,7 @@ export default function UPIQRScanner({ onScan, onBack }: UPIQRScannerProps) {
   const [scanAttempts, setScanAttempts] = useState<number>(0);
   const [lastScannedData, setLastScannedData] = useState<string>('');
   const [scanMode, setScanMode] = useState<'camera' | 'upload'>('camera');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -235,11 +236,12 @@ export default function UPIQRScanner({ onScan, onBack }: UPIQRScannerProps) {
 
   const parseJSONUPIFormat = (jsonData: unknown): UPIData | null => {
     try {
-      const payeeAddress = jsonData.upi || jsonData.vpa || jsonData.payeeAddress || '';
-      const payeeName = jsonData.name || jsonData.merchantName || jsonData.payeeName || 'Unknown Merchant';
-      const amount = jsonData.amount || jsonData.am || '';
-      const transactionNote = jsonData.note || jsonData.tn || jsonData.description || '';
-      const merchantCode = jsonData.merchantCode || jsonData.mc || jsonData.mid || '';
+      const data = jsonData as any;
+      const payeeAddress = data.upi || data.vpa || data.payeeAddress || '';
+      const payeeName = data.name || data.merchantName || data.payeeName || 'Unknown Merchant';
+      const amount = data.amount || data.am || '';
+      const transactionNote = data.note || data.tn || data.description || '';
+      const merchantCode = data.merchantCode || data.mc || data.mid || '';
       
       if (!payeeAddress) {
         return null;

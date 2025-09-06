@@ -24,7 +24,7 @@ interface UPIData {
 export default function Home() {
   const { connected, account } = useWallet();
   const [currentView, setCurrentView] = useState<'home' | 'scan' | 'upi-scan' | 'payment' | 'upi-payment' | 'test-qr'>('home');
-  const [merchantData, setMerchantData] = useState<{ merchantName?: string; amount?: number; upiId?: string } | null>(null);
+  const [merchantData, setMerchantData] = useState<{ merchantId: string; merchantName: string; amount: number; currency: string; description?: string; upiId?: string } | null>(null);
   const [upiData, setUpiData] = useState<UPIData | null>(null);
   const [balance, setBalance] = useState<number>(0);
   const [balanceInINR, setBalanceInINR] = useState<number>(0);
@@ -54,7 +54,13 @@ export default function Home() {
   };
 
   const handleQRScan = (data: { merchantName?: string; amount?: number; upiId?: string }) => {
-    setMerchantData(data);
+    setMerchantData({
+      merchantId: data.upiId || 'default-merchant',
+      merchantName: data.merchantName || 'Unknown Merchant',
+      amount: data.amount || 0,
+      currency: 'INR',
+      upiId: data.upiId
+    });
     setCurrentView('payment');
   };
 

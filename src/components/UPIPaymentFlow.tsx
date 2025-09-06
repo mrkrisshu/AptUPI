@@ -76,17 +76,9 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
       setProcessingStep('Creating payment record...');
       const paymentData = {
         merchantId: upiData.payeeAddress,
-        merchantName: upiData.payeeName,
-        amount: amountInUSDC,
-        currency: 'USDC',
-        description: upiData.transactionNote || `Payment to ${upiData.payeeName}`,
-        upiData: {
-          payeeAddress: upiData.payeeAddress,
-          payeeName: upiData.payeeName,
-          merchantCode: upiData.merchantCode,
-          transactionRef: upiData.transactionRef,
-          originalAmount: upiData.amount
-        }
+        amountINR: amountInUSDC * 83, // Convert USDC to INR for backend
+        walletAddress: account!.address.toString(),
+        merchantUpiId: upiData.payeeAddress
       };
 
       const payment = await paymentService.createPayment(paymentData);
@@ -106,7 +98,7 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
       // Step 3: Sign and submit transaction
       setProcessingStep('Signing transaction...');
       const response = await (window as unknown as { aptos: { signAndSubmitTransaction: (tx: unknown) => Promise<unknown> } }).aptos.signAndSubmitTransaction(transaction);
-      const txHash = response.hash || response;
+      const txHash = (response as any).hash || response;
       setTransactionHash(txHash);
 
       // Step 4: Wait for confirmation
@@ -136,7 +128,7 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
       setStep('success');
     } catch (err: unknown) {
       console.error('Payment failed:', err);
-      setError(err.message || 'Payment failed. Please try again.');
+      setError((err as any).message || 'Payment failed. Please try again.');
       setStep('error');
     }
   };
@@ -213,7 +205,7 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
           <div className="flex justify-between">
             <span className="text-green-700">Address:</span>
             <span className="font-mono text-green-900 text-xs">
-              {account?.address ? `${account.address.slice(0, 6)}...${account.address.slice(-4)}` : 'Not connected'}
+              {account?.address ? `${account.address.toString().slice(0, 6)}...${account.address.toString().slice(-4)}` : 'Not connected'}
             </span>
           </div>
         </div>

@@ -41,15 +41,31 @@ class AptosService {
   }
 
   /**
+   * Create a transfer transaction
+   */
+  async createTransferTransaction(senderAddress: string, recipientAddress: string, amount: number) {
+    try {
+      return await this.aptos.transferCoinTransaction({
+        sender: senderAddress,
+        recipient: recipientAddress,
+        amount: Math.floor(amount * 100000000), // Convert to octas
+      });
+    } catch (error) {
+      console.error('Error creating transfer transaction:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Transfer APT (representing USDC in testnet)
    */
   async transferAPT(fromAccount: Account, toAddress: string, amount: number) {
     try {
-      const transaction = await this.aptos.transferCoinTransaction({
-        sender: fromAccount.accountAddress,
-        recipient: toAddress,
-        amount: Math.floor(amount * 100000000), // Convert to octas
-      });
+      const transaction = await this.createTransferTransaction(
+        fromAccount.accountAddress.toString(),
+        toAddress,
+        amount
+      );
 
       const committedTransaction = await this.aptos.signAndSubmitTransaction({
         signer: fromAccount,
@@ -96,7 +112,7 @@ class AptosService {
    */
   async estimateGas(transaction: unknown) {
     try {
-      return await this.aptos.transaction.simulate.simple(transaction);
+      return await this.aptos.transaction.simulate.simple(transaction as any);
     } catch (error) {
       console.error('Error estimating gas:', error);
       return null;
