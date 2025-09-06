@@ -105,7 +105,7 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
 
       // Step 3: Sign and submit transaction
       setProcessingStep('Signing transaction...');
-      const response = await (window as any).aptos.signAndSubmitTransaction(transaction);
+      const response = await (window as unknown as { aptos: { signAndSubmitTransaction: (tx: unknown) => Promise<unknown> } }).aptos.signAndSubmitTransaction(transaction);
       const txHash = response.hash || response;
       setTransactionHash(txHash);
 
@@ -134,7 +134,7 @@ export default function UPIPaymentFlow({ upiData, onBack, onSuccess }: UPIPaymen
       }
 
       setStep('success');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Payment failed:', err);
       setError(err.message || 'Payment failed. Please try again.');
       setStep('error');

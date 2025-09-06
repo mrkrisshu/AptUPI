@@ -54,7 +54,7 @@ export default function WalletConnect({ className = '' }: WalletConnectProps) {
     }
   };
 
-  const formatAddress = (address: any) => {
+  const formatAddress = (address: string | { toString(): string } | undefined | null): string => {
     if (!address) return 'Unknown';
     const addressString = typeof address === 'string' ? address : address.toString();
     return `${addressString.slice(0, 6)}...${addressString.slice(-4)}`;

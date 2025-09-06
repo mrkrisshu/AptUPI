@@ -5,7 +5,7 @@ import { ArrowLeft, Camera, AlertCircle } from 'lucide-react';
 import QrScanner from 'qr-scanner';
 
 interface QRScannerProps {
-  onScan: (data: any) => void;
+  onScan: (data: { merchantName?: string; amount?: number; upiId?: string }) => void;
   onBack: () => void;
 }
 

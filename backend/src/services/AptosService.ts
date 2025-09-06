@@ -24,8 +24,9 @@ export class AptosService {
       }
 
       // Verify transaction is successful and involves our escrow address
-      return transaction.success && 
-             this.isTransactionToEscrow(transaction);
+      // Check if transaction has success property (for committed transactions)
+      const isSuccessful = 'success' in transaction ? transaction.success : true;
+      return isSuccessful && this.isTransactionToEscrow(transaction);
     } catch (error) {
       console.error('Error verifying transaction:', error);
       return false;

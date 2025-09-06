@@ -91,7 +91,7 @@ class PaymentService {
     return result.data;
   }
 
-  async initiateUPIPayout(data: UPIPayoutData): Promise<any> {
+  async initiateUPIPayout(data: UPIPayoutData): Promise<unknown> {
     const response = await fetch(`${this.baseURL}/upi/payout`, {
       method: 'POST',
       headers: {

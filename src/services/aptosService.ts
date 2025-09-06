@@ -1,4 +1,4 @@
-import { Aptos, AptosConfig, Network, Account, Ed25519PrivateKey } from '@aptos-labs/ts-sdk';
+import { Aptos, AptosConfig, Network, Account } from '@aptos-labs/ts-sdk';
 
 class AptosService {
   private aptos: Aptos;
@@ -94,7 +94,7 @@ class AptosService {
   /**
    * Estimate gas for a transaction
    */
-  async estimateGas(transaction: any) {
+  async estimateGas(transaction: unknown) {
     try {
       return await this.aptos.transaction.simulate.simple(transaction);
     } catch (error) {

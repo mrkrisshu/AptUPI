@@ -233,7 +233,7 @@ export default function UPIQRScanner({ onScan, onBack }: UPIQRScannerProps) {
     }
   };
 
-  const parseJSONUPIFormat = (jsonData: any): UPIData | null => {
+  const parseJSONUPIFormat = (jsonData: unknown): UPIData | null => {
     try {
       const payeeAddress = jsonData.upi || jsonData.vpa || jsonData.payeeAddress || '';
       const payeeName = jsonData.name || jsonData.merchantName || jsonData.payeeName || 'Unknown Merchant';

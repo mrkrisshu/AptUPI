@@ -10,7 +10,7 @@ interface WalletProviderProps {
 
 export function WalletProvider({ children }: WalletProviderProps) {
   // Use empty array for now - wallets will be auto-detected
-  const wallets: any[] = [];
+  const wallets: never[] = [];
 
   return (
     <AptosWalletAdapterProvider
